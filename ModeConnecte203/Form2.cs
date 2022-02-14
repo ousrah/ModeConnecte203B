@@ -25,21 +25,22 @@ namespace ModeConnecte203
             SqlDataReader dr = com.ExecuteReader();
 
             DataTable tbl = new DataTable();
-            DataColumn numouvr = new DataColumn("numouvr",typeof(int));
-            DataColumn nomouvr = new DataColumn("nomouvr", typeof(string));
-            tbl.Columns.Add(numouvr);
-            tbl.Columns.Add(nomouvr);
+            /*          DataColumn numouvr = new DataColumn("numouvr",typeof(int));
+                        DataColumn nomouvr = new DataColumn("nomouvr", typeof(string));
+                        tbl.Columns.Add(numouvr);
+                        tbl.Columns.Add(nomouvr);
 
 
-            while (dr.Read())
-            {
-                DataRow r = tbl.NewRow();
-                r[0] = dr["numouvr"];
-                r[1] = dr["nomouvr"];
-                tbl.Rows.Add(r);
-           }
-
-
+                        while (dr.Read())
+                        {
+                            DataRow r = tbl.NewRow();
+                            r[0] = dr["numouvr"];
+                            r[1] = dr["nomouvr"];
+                            tbl.Rows.Add(r);
+                       }
+            */
+            tbl.Load(dr);
+  
             listBox1.DisplayMember = "nomouvr";
             listBox1.ValueMember = "numouvr";
             listBox1.DataSource = tbl;
