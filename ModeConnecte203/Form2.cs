@@ -24,7 +24,7 @@ namespace ModeConnecte203
             SqlCommand com = new SqlCommand("select * from ouvrage", cn);
             SqlDataReader dr = com.ExecuteReader();
 
-            DataTable tbl = dr.
+            DataTable tbl = new DataTable();
             DataColumn numouvr = new DataColumn("numouvr",typeof(int));
             DataColumn nomouvr = new DataColumn("nomouvr", typeof(string));
             tbl.Columns.Add(numouvr);
