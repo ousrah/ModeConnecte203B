@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Data.SqlClient;
+using System.IO;
+using Newtonsoft.Json;
 
 namespace ModeConnecte203
 {
@@ -19,7 +21,19 @@ namespace ModeConnecte203
 
         private void button1_Click(object sender, EventArgs e)
         {
-            SqlConnection cn = new SqlConnection(@"data source=.\sqlserver2017;initial catalog=librairie;user id=sa;Password=P@ssw0rd");
+
+            StreamReader sr = new StreamReader("config.cfg");
+            string c = sr.ReadToEnd();
+            config p = Newtonsoft.Json.JsonConvert.DeserializeObject<config>(c);
+            sr.Close();
+
+
+            string cs = "data source=" + p.dataSource + ";initial catalog=" + p.initialCatalog + ";user id =" + p.userId + ";password=" + p.password;
+
+            string newCs = db.decrypterChaineConnection(cs);
+
+
+            SqlConnection cn = new SqlConnection(newCs);
             cn.Open();
             SqlCommand com = new SqlCommand("select * from ouvrage",cn);
             SqlDataReader dr = com.ExecuteReader();
@@ -49,7 +63,19 @@ namespace ModeConnecte203
 
         private void button2_Click(object sender, EventArgs e)
         {
-            SqlConnection cn = new SqlConnection(@"data source=.\sqlserver2017;initial catalog=librairie;user id=sa;Password=P@ssw0rd");
+
+            StreamReader sr = new StreamReader("config.cfg");
+            string c = sr.ReadToEnd();
+            config p = Newtonsoft.Json.JsonConvert.DeserializeObject<config>(c);
+            sr.Close();
+
+
+            string cs = "data source=" + p.dataSource + ";initial catalog=" + p.initialCatalog + ";user id =" + p.userId + ";password=" + p.password;
+
+            string newCs = db.decrypterChaineConnection(cs);
+
+
+            SqlConnection cn = new SqlConnection(newCs);
             cn.Open();
             SqlCommand com = new SqlCommand("select count(*) from ouvrage", cn);
             int nb = Convert.ToInt32(com.ExecuteScalar());
@@ -61,13 +87,30 @@ namespace ModeConnecte203
 
         private void button3_Click(object sender, EventArgs e)
         {
-            SqlConnection cn = new SqlConnection(@"data source=.\sqlserver2017;initial catalog=librairie;user id=sa;Password=P@ssw0rd");
+
+            StreamReader sr = new StreamReader("config.cfg");
+            string c = sr.ReadToEnd();
+            config p = Newtonsoft.Json.JsonConvert.DeserializeObject<config>(c);
+            sr.Close();
+
+
+            string cs = "data source=" + p.dataSource + ";initial catalog=" + p.initialCatalog + ";user id =" + p.userId + ";password=" + p.password;
+
+            string newCs = db.decrypterChaineConnection(cs);
+
+
+            SqlConnection cn = new SqlConnection(newCs);
             cn.Open();
             SqlCommand com = new SqlCommand("insert into ouvrage (numouvr,nomed, nomouvr,numrub, anneeparu) values (54216521,'CLET','test mode connecte',1,2022)", cn);
             com.ExecuteNonQuery();
             MessageBox.Show("ouvrage ajouté avec success");
             cn.Close();
             cn = null;
+
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
 
         }
     }

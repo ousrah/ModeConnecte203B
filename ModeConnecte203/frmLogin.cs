@@ -7,6 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Data.SqlClient;
+using System.IO;
+using Newtonsoft.Json;
+
 
 using System.Security.Cryptography;
 
@@ -46,7 +49,23 @@ namespace ModeConnecte203
                         password like '0' or '1'='1'     "
              * 
              * */
-            SqlConnection cn = new SqlConnection(@"data source=.\sqlserver2017;initial catalog=librairie;user id=sa;Password=P@ssw0rd");
+
+
+            //       string cs = ConfigurationManager.ConnectionStrings["LibrairieConnectionString"].ConnectionString;
+
+            StreamReader sr = new StreamReader("config.cfg");
+            string c = sr.ReadToEnd();
+            config p = Newtonsoft.Json.JsonConvert.DeserializeObject<config>(c);
+            sr.Close();
+
+
+            string cs = "data source=" + p.dataSource + ";initial catalog=" + p.initialCatalog + ";user id =" + p.userId + ";password=" + p.password;
+
+            string newCs = db.decrypterChaineConnection(cs);
+
+
+            SqlConnection cn = new SqlConnection(newCs);
+            
             cn.Open();
             SqlCommand com = new SqlCommand("select * from utilisateur where login like '"+txtLogin.Text+"'", cn);
             SqlDataReader dr = com.ExecuteReader();
@@ -75,6 +94,11 @@ namespace ModeConnecte203
         private void btnFermer_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void frmLogin_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

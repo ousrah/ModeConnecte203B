@@ -7,7 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Data.SqlClient;
-
+using System.IO;
+using Newtonsoft.Json;
 namespace ModeConnecte203
 {
     public partial class Form2 : Form
@@ -19,7 +20,19 @@ namespace ModeConnecte203
 
         private void button1_Click(object sender, EventArgs e)
         {
-            SqlConnection cn = new SqlConnection(@"data source=.\sqlserver2017;initial catalog=librairie;user id=sa;Password=P@ssw0rd");
+
+            StreamReader sr = new StreamReader("config.cfg");
+            string c = sr.ReadToEnd();
+            config p = Newtonsoft.Json.JsonConvert.DeserializeObject<config>(c);
+            sr.Close();
+
+
+            string cs = "data source=" + p.dataSource + ";initial catalog=" + p.initialCatalog + ";user id =" + p.userId + ";password=" + p.password;
+
+            string newCs = db.decrypterChaineConnection(cs);
+
+
+            SqlConnection cn = new SqlConnection(newCs);
             cn.Open();
             SqlCommand com = new SqlCommand("select * from ouvrage", cn);
             SqlDataReader dr = com.ExecuteReader();
@@ -51,6 +64,11 @@ namespace ModeConnecte203
             com = null;
             cn.Close();
             cn = null;
+        }
+
+        private void Form2_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
